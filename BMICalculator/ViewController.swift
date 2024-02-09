@@ -95,28 +95,36 @@ class ViewController: UIViewController {
             }
         }
         
-        if let height1 = Double(heightType1.text ?? ""),
-           let weight = Double(weightType.text ?? 	"") {
-            
-            if (selectedMeasureType == "STANDARD" && !(Double(heightType2.text ?? "") != nil)) {
-                print("Invalid input for height or weight1.")
-                return
+        var calculatedBmiValue : Double = 0.0
+        if (selectedMeasureType == "STANDARD")
+        {
+            if let height1 = Double(heightType1.text ?? ""),
+               let weight = Double(weightType.text ??     ""), let height2 = Double(heightType2.text ??     "")
+            {
+                calculatedBmiValue = BMICalculator().calculateBMI(height1: height1, height2: height2, weight: weight, mesureType: selectedMeasureType)
             }
-
-            let height2 = Double(heightType2.text ?? "") ?? 0.0
-            let calculatedBmiValue = BMICalculator().calculateBMI(height1: height1, height2: height2, weight: weight, mesureType: selectedMeasureType)
-            
-            let category = BMICalculator().findCategory(bmiValue: calculatedBmiValue)
-            bmiValue.text = String(calculatedBmiValue)
-            
-            bmiCategories.isHidden = false
-            resultCategory.text = category
-            
-        } else {
-            print("Invalid input for height or weight2.")
+            else {
+                print("Invalid input for height or weight.")
+            }
         }
-
-        
+        else
+        {
+            if let height1 = Double(heightType1.text ?? ""),
+               let weight = Double(weightType.text ?? 	"")
+            {
+                
+                calculatedBmiValue = BMICalculator().calculateBMI(height1: height1, height2: 0.0, weight: weight, mesureType: selectedMeasureType)
+            }
+            else {
+                print("Invalid input for height or weight.")
+            }
+        }
+            
+        let category = BMICalculator().findCategory(bmiValue: calculatedBmiValue)
+        bmiValue.text = String(calculatedBmiValue)
+            
+        bmiCategories.isHidden = false
+        resultCategory.text = category
     }
     @IBAction func clearValues(_ sender: Any) {
         heightType1.text = ""
